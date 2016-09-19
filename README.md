@@ -1,35 +1,31 @@
-%define=box block bgcolor=#dddddd border="2px dotted white"%
-%define=wbox block bgcolor=#eeeeee color=#000000 border="1px dotted black" padding="2px"%
+# Logging library for Libelium Waspmote
+by Fabrice Jammes - 2016
 
+Forked from https://github.com/mrRobot62/Arduino-logging-library
 
-%wbox%[@Logging library for Arudino
-by LunaX - 2010/2011
-@]%%
-
-!CURRENT VERSION
+# CURRENT VERSION
 
 1.0)24-FEB-2012 beta version.
 
-!HISTORY
+# Description
 
-1.0) 24-FEB-2012 Initial Release\\
-
-
-!DESCRIPTION
 Easy to use logging library, like log4j or log4net. After getting a logger object, you will have
 methods like Error, Info, Warn, Debug, Verbose to log informations over RS232.
 Depending on the current loglevel lower logleves are not printed out.
 It is possible to work with variable argument lists during output.
 Detailed description is included in doc folder
 
-!HOW TO IMPORT/INSTALL
-Download here zip file here [[https://github.com/mrRobot62/Arduino-logging-library]]
+# HOW TO IMPORT/INSTALL
 
-Put the Logging folder in "libraries\".
+```
+cd <ide-install-path>/waspmote-pro-ide-v04-linux64/libraries
+sudo git clone git@github.com:fjammes/WaspLogging.git
+```
 
-Open example project which is included in the zip file. Try it, like it :-)
+Open example project which is included in the `example` directory. Try it, like it :-)
 
-Some benefits:
+# Some benefits:
+
 !Use formated strings with wildcards
 ||border=0
 ||!wildcard	||!Comment	||Example 			||
@@ -51,4 +47,3 @@ Some benefits:
 ||Info ||print messages with loglevel >= LOGLEVEL_INFO ||
 ||Debug ||print messages with loglevel >= LOGLEVEL_DEBUG ||
 ||Verbose ||print messages with loglevel >= LOGLEVEL_VERGBOSE ||
-%%
