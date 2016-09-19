@@ -1,9 +1,7 @@
 #include "Logging.h"
 
-void Logging::Init(int level, long baud){
+void Logging::Init(int level){
     _level = constrain(level,LOG_LEVEL_NOOUTPUT,LOG_LEVEL_VERBOSE);
-    _baud = baud;
-    Serial.begin(_baud);
 }
 
 void Logging::Error(char* msg, ...){
@@ -51,66 +49,66 @@ void Logging::Verbose(char* msg, ...){
             ++format;
             if (*format == '\0') break;
             if (*format == '%') {
-                Serial.print(*format);
+                USB.print(*format);
                 continue;
             }
             if( *format == 's' ) {
 				register char *s = (char *)va_arg( args, int );
-				Serial.print(s);
+				USB.print(s);
 				continue;
 			}
             if( *format == 'd' || *format == 'i') {
-				Serial.print(va_arg( args, int ),DEC);
+				USB.print(va_arg( args, int ),DEC);
 				continue;
 			}
             if( *format == 'x' ) {
-				Serial.print(va_arg( args, int ),HEX);
+				USB.print(va_arg( args, int ),HEX);
 				continue;
 			}
             if( *format == 'X' ) {
-				Serial.print("0x");
-				Serial.print(va_arg( args, int ),HEX);
+				USB.print("0x");
+				USB.print(va_arg( args, int ),HEX);
 				continue;
 			}
             if( *format == 'b' ) {
-				Serial.print(va_arg( args, int ),BIN);
+				USB.print(va_arg( args, int ),BIN);
 				continue;
 			}
             if( *format == 'B' ) {
-				Serial.print("0b");
-				Serial.print(va_arg( args, int ),BIN);
+				USB.print("0b");
+				USB.print(va_arg( args, int ),BIN);
 				continue;
 			}
             if( *format == 'l' ) {
-				Serial.print(va_arg( args, long ),DEC);
+				USB.print(va_arg( args, long ),DEC);
 				continue;
 			}
 
             if( *format == 'c' ) {
-				Serial.print(va_arg( args, int ));
+				USB.print(va_arg( args, int ));
 				continue;
 			}
             if( *format == 't' ) {
 				if (va_arg( args, int ) == 1) {
-					Serial.print("T");
+					USB.print("T");
 				}
 				else {
-					Serial.print("F");				
+					USB.print("F");				
 				}
 				continue;
 			}
             if( *format == 'T' ) {
 				if (va_arg( args, int ) == 1) {
-					Serial.print("true");
+					USB.print("true");
 				}
 				else {
-					Serial.print("false");				
+					USB.print("false");				
 				}
 				continue;
 			}
 
         }
-        Serial.print(*format);
+        USB.print(*format);
     }
  }
  
