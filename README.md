@@ -1,4 +1,4 @@
-# Logging library for Libelium Waspmote
+# Logging library for Arduino and Libelium Waspmote
 by Fabrice Jammes - 2016
 
 Forked from https://github.com/mrRobot62/Arduino-logging-library
@@ -13,8 +13,16 @@ Easy to use logging library, like log4j or log4net:
 # Install procedure 
 
 ```shell
+# for Libellium Waspmote
 cd <ide-install-path>/waspmote-pro-ide-v04-linux64/libraries
-sudo git clone git@github.com:fjammes/WaspLogging.git
+sudo git clone git@github.com:fjammes/ArduinoLogging.git
+git ckeckout waspmote
+```
+
+```shell
+# for Arduino
+cd $HOME/Arduino/libraries
+sudo git clone git@github.com:fjammes/ArduinoLogging.git
 ```
 
 Open example project which is included in the `example` directory. Try it, like it :-)
