@@ -10,10 +10,10 @@
 
 
 #define LOG_LEVEL_NOOUTPUT 0 
-#define LOG_LEVEL_ERRORS 1
-#define LOG_LEVEL_INFOS 2
+#define LOG_LEVEL_ERROR 1
+#define LOG_LEVEL_INFO 2
 #define LOG_LEVEL_DEBUG 3
-#define LOG_LEVEL_VERBOSE 4
+#define LOG_LEVEL_TRACE 4
 
 // default loglevel if nothing is set from user
 #define LOGLEVEL LOG_LEVEL_DEBUG 
@@ -127,7 +127,7 @@ public:
 	* \return void
 	*/
 
-    void Verbose(char* msg, ...);   
+    void Trace(char* msg, ...);   
 
     
 private:

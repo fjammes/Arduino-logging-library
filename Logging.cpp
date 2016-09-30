@@ -1,13 +1,13 @@
 #include "Logging.h"
 
 void Logging::Init(int level, long baud){
-    _level = constrain(level,LOG_LEVEL_NOOUTPUT,LOG_LEVEL_VERBOSE);
+    _level = constrain(level,LOG_LEVEL_NOOUTPUT,LOG_LEVEL_TRACE);
     _baud = baud;
     Serial.begin(_baud);
 }
 
 void Logging::Error(char* msg, ...){
-    if (LOG_LEVEL_ERRORS <= _level) {   
+    if (LOG_LEVEL_ERROR <= _level) {   
 		Serial.print ("ERROR: ");
         va_list args;
         va_start(args, msg);
@@ -17,7 +17,8 @@ void Logging::Error(char* msg, ...){
 
 
 void Logging::Info(char* msg, ...){
-    if (LOG_LEVEL_INFOS <= _level) {
+    if (LOG_LEVEL_INFO <= _level) {
+		Serial.print ("INFO: ");
         va_list args;
         va_start(args, msg);
         print(msg,args);
@@ -26,6 +27,7 @@ void Logging::Info(char* msg, ...){
 
 void Logging::Debug(char* msg, ...){
     if (LOG_LEVEL_DEBUG <= _level) {
+		Serial.print ("DEBUG: ");
         va_list args;
         va_start(args, msg);
         print(msg,args);
@@ -33,8 +35,9 @@ void Logging::Debug(char* msg, ...){
 }
 
 
-void Logging::Verbose(char* msg, ...){
-    if (LOG_LEVEL_VERBOSE <= _level) {
+void Logging::Trace(char* msg, ...){
+    if (LOG_LEVEL_TRACE <= _level) {
+		Serial.print ("TRACE: ");
         va_list args;
         va_start(args, msg);
         print(msg,args);
