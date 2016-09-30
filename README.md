@@ -20,9 +20,10 @@ git ckeckout waspmote
 ```
 
 ```shell
-# for Arduino
+# for Arduino M0 Pro
 cd $HOME/Arduino/libraries
 sudo git clone git@github.com:fjammes/ArduinoLogging.git
+git ckeckout arduino-m0pro 
 ```
 
 Open example project which is included in the `example` directory. Try it, like it :-)
