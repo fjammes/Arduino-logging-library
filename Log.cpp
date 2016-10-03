@@ -1,52 +1,25 @@
-#include "Logging.h"
+#include "Log.h"
 
-void Logging::Init(int level, long baud){
-    _level = constrain(level,LOG_LEVEL_NOOUTPUT,LOG_LEVEL_TRACE);
+void Log::init(Level level, long baud){
+    _level = level;
     _baud = baud;
     Serial.begin(_baud);
 }
 
-void Logging::Error(char* msg, ...){
-    if (LOG_LEVEL_ERROR <= _level) {   
-		Serial.print ("ERROR: ");
+void Log::log(Level level, char* msg, ...){
+    if (level <= _level) {
+    	char loglevel[8];
+    	sprintf(loglevel, "%s:", LevelNames[level]);
+		Serial.print(loglevel);
         va_list args;
         va_start(args, msg);
         print(msg,args);
+        Serial.print(CR);
     }
 }
 
 
-void Logging::Info(char* msg, ...){
-    if (LOG_LEVEL_INFO <= _level) {
-		Serial.print ("INFO: ");
-        va_list args;
-        va_start(args, msg);
-        print(msg,args);
-    }
-}
-
-void Logging::Debug(char* msg, ...){
-    if (LOG_LEVEL_DEBUG <= _level) {
-		Serial.print ("DEBUG: ");
-        va_list args;
-        va_start(args, msg);
-        print(msg,args);
-    }
-}
-
-
-void Logging::Trace(char* msg, ...){
-    if (LOG_LEVEL_TRACE <= _level) {
-		Serial.print ("TRACE: ");
-        va_list args;
-        va_start(args, msg);
-        print(msg,args);
-    }
-}
-
-
-
- void Logging::print(const char *format, va_list args) {
+ void Log::print(const char *format, va_list args) {
     //
     // loop through format string
     for (; *format != 0; ++format) {
@@ -88,6 +61,10 @@ void Logging::Trace(char* msg, ...){
 				Serial.print(va_arg( args, long ),DEC);
 				continue;
 			}
+            if( *format == 'f' ) {
+                Serial.print(va_arg( args, double ),6);
+            	continue;
+            }
 
             if( *format == 'c' ) {
 				Serial.print(va_arg( args, int ));
@@ -116,10 +93,8 @@ void Logging::Trace(char* msg, ...){
         Serial.print(*format);
     }
  }
- 
- Logging Log = Logging();
 
- 
+ Log logger = Log();
  
   
 
