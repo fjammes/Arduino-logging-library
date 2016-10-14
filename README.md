@@ -16,6 +16,7 @@ Easy to use logging library, like log4j or log4net:
 # for Libellium Waspmote
 cd <ide-install-path>/waspmote-pro-ide-v04-linux64/libraries
 sudo git clone git@github.com:fjammes/ArduinoLogging.git
+cd ArduinoLogging
 git ckeckout waspmote
 ```
 
@@ -23,7 +24,6 @@ git ckeckout waspmote
 # for Arduino M0 Pro
 cd $HOME/Arduino/libraries
 sudo git clone git@github.com:fjammes/ArduinoLogging.git
-git ckeckout arduino-m0pro
 ```
 
 Open example project which is included in the `example` directory. Try it, like it :-)
@@ -45,11 +45,3 @@ Open example project which is included in the `example` directory. Try it, like 
 |%t |replace and convert boolean value into "t" or "f" |logger.Info ("is it true? %t), myBool); |
 |%T |like %t but convert into "true" or "false" |logger.Info ("is it true? %T), myBool); |
 
-## Methods for output
-
-|Method |Comment |
-|-------|--------|
-|Error |print messages with loglevel >= LOGLEVEL_ERROR |
-|Info |print messages with loglevel >= LOGLEVEL_INFO |
-|Debug |print messages with loglevel >= LOGLEVEL_DEBUG |
-|Verbose |print messages with loglevel >= LOGLEVEL_VERGBOSE |
