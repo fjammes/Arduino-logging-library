@@ -6,7 +6,7 @@ void Log::init(Level level, long baud){
     Serial.begin(_baud);
 }
 
-void Log::log(Level level, char* msg, ...){
+void Log::log(Level level, char const * const msg, ...){
     if (level <= _level) {
     	char loglevel[8];
     	sprintf(loglevel, "%s:", LevelNames[level]);

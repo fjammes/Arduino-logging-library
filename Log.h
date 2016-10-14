@@ -108,7 +108,7 @@ public:
 	* \param ... any number of variables
 	* \return void
 	*/
-	void log(Level level, char* msg, ...);
+	void log(Level level, char const * const msg, ...);
     
 private:
     int _level = Log::TRACE;
