@@ -3,9 +3,9 @@
 #include <inttypes.h>
 #include <stdarg.h>
 #if defined(ARDUINO) && ARDUINO >= 100
-#include "Arduino.h"
+	#include "Arduino.h"
 #else
-#include "WProgram.h"
+	#include "WProgram.h"
 #endif
 
 #define CR "\r\n"
@@ -44,21 +44,6 @@
     do { \
         logger.log(Log::FATAL, msg); \
     } while (false)
-
-class LogSerial {
-public:
-
-    /**
-     * default Constructor
-     */
-    LogSerial() {};
-
-    void print();
-
-private:
-    Serial_& _serial = SerialUSB;
-    Uart& uart = Serial;
-};
 
 /**
 * Logging is a helper class to output informations over
@@ -99,32 +84,32 @@ private:
 class Log {
 public:
 
-    enum Level { FATAL, ERROR, WARN, INFO, DEBUG, TRACE };
-    char const *const LevelNames[6] = { "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE" };
+	enum Level { FATAL, ERROR, WARN, INFO, DEBUG, TRACE };
+	char const *const LevelNames[6] = { "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE" };
 
     /**
-     * default Constructor
-     */
-    Log() {} ;
+	 * default Constructor
+	 */
+    Log(){} ;
+	
+    /** 
+	* Initializing, must be called as first.
+	* \param void
+	* \return void
+	*
+	*/
+	void init(Log::Level level, long baud);
+
 
     /**
-    * Initializing, must be called as first.
-    * \param void
-    * \return void
-    *
-    */
-    void init(Log::Level level, long baud);
-
-
-    /**
-    * Output an log message with a given log level.
-    * Output message contains level followed by original msg
-    * \param msg format string to output
-    * \param ... any number of variables
-    * \return void
-    */
-    void log(Level level, char const * const msg, ...);
-
+	* Output an log message with a given log level.
+	* Output message contains level followed by original msg
+	* \param msg format string to output
+	* \param ... any number of variables
+	* \return void
+	*/
+	void log(Level level, char const * const msg, ...);
+    
 private:
     int _level = Log::TRACE;
     long _baud;

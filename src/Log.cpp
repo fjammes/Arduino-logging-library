@@ -1,16 +1,30 @@
 #include "Log.h"
 
-void Log::init(Level level, long baud){
+//#define Serial SerialUSB
+
+void Log::init(Level level, long baud) {
     _level = level;
     _baud = baud;
     Serial.begin(_baud);
 }
 
-void Log::log(Level level, char const * const msg, ...){
+void LogSerial::print() {
+	if (Serial)
+		Serial.print("Coucou SERIAL");
+	if (SerialUSB){
+		SerialUSB.print("Coucou SerialUSB");
+	}
+
+}
+
+void Log::log(Level level, char const * const msg, ...) {
+	// TODO go for static
+	LogSerial logSerial;
+	logSerial.print();
     if (level <= _level) {
-    	char loglevel[8];
-    	sprintf(loglevel, "%s:", LevelNames[level]);
-		Serial.print(loglevel);
+        char loglevel[8];
+        sprintf(loglevel, "%s:", LevelNames[level]);
+        Serial.print(loglevel);
         va_list args;
         va_start(args, msg);
         print(msg,args);
@@ -18,8 +32,7 @@ void Log::log(Level level, char const * const msg, ...){
     }
 }
 
-
- void Log::print(const char *format, va_list args) {
+void Log::print(const char *format, va_list args) {
     //
     // loop through format string
     for (; *format != 0; ++format) {
@@ -31,72 +44,72 @@ void Log::log(Level level, char const * const msg, ...){
                 continue;
             }
             if( *format == 's' ) {
-				register char *s = (char *)va_arg( args, int );
-				Serial.print(s);
-				continue;
-			}
+                register char *s = (char *)va_arg( args, int );
+                Serial.print(s);
+                continue;
+            }
             if( *format == 'd' || *format == 'i') {
-				Serial.print(va_arg( args, int ),DEC);
-				continue;
-			}
+                Serial.print(va_arg( args, int ),DEC);
+                continue;
+            }
             if( *format == 'x' ) {
-				Serial.print(va_arg( args, int ),HEX);
-				continue;
-			}
+                Serial.print(va_arg( args, int ),HEX);
+                continue;
+            }
             if( *format == 'X' ) {
-				Serial.print("0x");
-				Serial.print(va_arg( args, int ),HEX);
-				continue;
-			}
+                Serial.print("0x");
+                Serial.print(va_arg( args, int ),HEX);
+                continue;
+            }
             if( *format == 'b' ) {
-				Serial.print(va_arg( args, int ),BIN);
-				continue;
-			}
+                Serial.print(va_arg( args, int ),BIN);
+                continue;
+            }
             if( *format == 'B' ) {
-				Serial.print("0b");
-				Serial.print(va_arg( args, int ),BIN);
-				continue;
-			}
+                Serial.print("0b");
+                Serial.print(va_arg( args, int ),BIN);
+                continue;
+            }
             if( *format == 'l' ) {
-				Serial.print(va_arg( args, long ),DEC);
-				continue;
-			}
+                Serial.print(va_arg( args, long ),DEC);
+                continue;
+            }
             if( *format == 'f' ) {
                 Serial.print(va_arg( args, double ),6);
-            	continue;
+                continue;
             }
 
             if( *format == 'c' ) {
-				Serial.print(va_arg( args, int ));
-				continue;
-			}
+                Serial.print(va_arg( args, int ));
+                continue;
+            }
             if( *format == 't' ) {
-				if (va_arg( args, int ) == 1) {
-					Serial.print("T");
-				}
-				else {
-					Serial.print("F");				
-				}
-				continue;
-			}
+                if (va_arg( args, int ) == 1) {
+                    Serial.print("T");
+                }
+                else {
+                    Serial.print("F");
+                }
+                continue;
+            }
             if( *format == 'T' ) {
-				if (va_arg( args, int ) == 1) {
-					Serial.print("true");
-				}
-				else {
-					Serial.print("false");				
-				}
-				continue;
-			}
+                if (va_arg( args, int ) == 1) {
+                    Serial.print("true");
+                }
+                else {
+                    Serial.print("false");
+                }
+                continue;
+            }
 
         }
         Serial.print(*format);
     }
- }
+}
 
- Log logger = Log();
- 
-  
+Log logger = Log();
+
+
 
 
 
