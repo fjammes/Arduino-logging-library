@@ -7,14 +7,27 @@ void Log::init(Level level, long baud) {
     _baud = baud;
     Serial.begin(_baud);
     SerialUSB.begin(_baud);
-    while (millis()<5000 and !SerialUSB);
+
+    int const interval = 4000;
+    unsigned long initialMillis = millis();
+    unsigned long currentMillis;
+    int elapsed;
+    do {
+        currentMillis = millis();
+        elapsed = currentMillis - initialMillis;
+    }
+    while (elapsed<interval and not SerialUSB);
+
+    char usb_port_name[12];
     if (SerialUSB) {
         logSerial = &SerialUSB;
+        strcpy(usb_port_name, "native");
     }
     else if (Serial) {
         logSerial = &Serial;
+        strcpy(usb_port_name, "programming");
     }
-    logSerial->print("Logger ready");
+    this->log(Log::TRACE, "Logger ready, printing on %s port", usb_port_name);
 }
 
 void Log::log(Level level, char const * const msg, ...) {
