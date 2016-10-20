@@ -45,21 +45,6 @@
         logger.log(Log::FATAL, msg); \
     } while (false)
 
-class LogSerial {
-public:
-
-    /**
-     * default Constructor
-     */
-    LogSerial() {};
-
-    void print();
-
-private:
-    Serial_& _serial = SerialUSB;
-    Uart& uart = Serial;
-};
-
 /**
 * Logging is a helper class to output informations over
 * RS232. If you know log4j or log4net, this logging class
@@ -129,7 +114,11 @@ private:
     int _level = Log::TRACE;
     long _baud;
 
+    Stream* logSerial;
+
     void print(const char *format, va_list args);
+
+
 };
 
 extern Log logger;

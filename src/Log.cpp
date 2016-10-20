@@ -6,29 +6,26 @@ void Log::init(Level level, long baud) {
     _level = level;
     _baud = baud;
     Serial.begin(_baud);
-}
-
-void LogSerial::print() {
-	if (Serial)
-		Serial.print("Coucou SERIAL");
-	if (SerialUSB){
-		SerialUSB.print("Coucou SerialUSB");
-	}
-
+    SerialUSB.begin(_baud);
+    while (millis()<5000 and !SerialUSB);
+    if (SerialUSB) {
+        logSerial = &SerialUSB;
+    }
+    else if (Serial) {
+        logSerial = &Serial;
+    }
+    logSerial->print("Logger ready");
 }
 
 void Log::log(Level level, char const * const msg, ...) {
-	// TODO go for static
-	LogSerial logSerial;
-	logSerial.print();
     if (level <= _level) {
         char loglevel[8];
         sprintf(loglevel, "%s:", LevelNames[level]);
-        Serial.print(loglevel);
+        logSerial->print(loglevel);
         va_list args;
         va_start(args, msg);
         print(msg,args);
-        Serial.print(CR);
+        logSerial->print(CR);
     }
 }
 
@@ -40,70 +37,70 @@ void Log::print(const char *format, va_list args) {
             ++format;
             if (*format == '\0') break;
             if (*format == '%') {
-                Serial.print(*format);
+                logSerial->print(*format);
                 continue;
             }
             if( *format == 's' ) {
                 register char *s = (char *)va_arg( args, int );
-                Serial.print(s);
+                logSerial->print(s);
                 continue;
             }
             if( *format == 'd' || *format == 'i') {
-                Serial.print(va_arg( args, int ),DEC);
+                logSerial->print(va_arg( args, int ),DEC);
                 continue;
             }
             if( *format == 'x' ) {
-                Serial.print(va_arg( args, int ),HEX);
+                logSerial->print(va_arg( args, int ),HEX);
                 continue;
             }
             if( *format == 'X' ) {
-                Serial.print("0x");
-                Serial.print(va_arg( args, int ),HEX);
+                logSerial->print("0x");
+                logSerial->print(va_arg( args, int ),HEX);
                 continue;
             }
             if( *format == 'b' ) {
-                Serial.print(va_arg( args, int ),BIN);
+                logSerial->print(va_arg( args, int ),BIN);
                 continue;
             }
             if( *format == 'B' ) {
-                Serial.print("0b");
-                Serial.print(va_arg( args, int ),BIN);
+                logSerial->print("0b");
+                logSerial->print(va_arg( args, int ),BIN);
                 continue;
             }
             if( *format == 'l' ) {
-                Serial.print(va_arg( args, long ),DEC);
+                logSerial->print(va_arg( args, long ),DEC);
                 continue;
             }
             if( *format == 'f' ) {
-                Serial.print(va_arg( args, double ),6);
+                logSerial->print(va_arg( args, double ),6);
                 continue;
             }
 
             if( *format == 'c' ) {
-                Serial.print(va_arg( args, int ));
+                logSerial->print(va_arg( args, int ));
                 continue;
             }
             if( *format == 't' ) {
                 if (va_arg( args, int ) == 1) {
-                    Serial.print("T");
+                    logSerial->print("T");
                 }
                 else {
-                    Serial.print("F");
+                    logSerial->print("F");
                 }
                 continue;
             }
             if( *format == 'T' ) {
                 if (va_arg( args, int ) == 1) {
-                    Serial.print("true");
+                    logSerial->print("true");
                 }
                 else {
-                    Serial.print("false");
+                    logSerial->print("false");
                 }
                 continue;
             }
 
         }
-        Serial.print(*format);
+        logSerial->print(*format);
     }
 }
 
