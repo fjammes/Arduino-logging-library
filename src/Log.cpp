@@ -1,14 +1,20 @@
 #include "Log.h"
 
-//#define Serial SerialUSB
-
 void Log::init(Level level, long baud) {
     _level = level;
     _baud = baud;
+    _detectSerial(baud);
+}
+
+void Log::init(Level level, Stream* stream) {
+    _level = level;
+    _stream = stream;
+}
+
+void Log::_detectSerial(long baud) {
     Serial.begin(_baud);
     SerialUSB.begin(_baud);
-
-    int const interval = 4000;
+    int const interval = 5000;
     unsigned long initialMillis = millis();
     unsigned long currentMillis;
     int elapsed;
@@ -20,11 +26,11 @@ void Log::init(Level level, long baud) {
 
     char usb_port_name[12];
     if (SerialUSB) {
-        logSerial = &SerialUSB;
+        _stream = &SerialUSB;
         strcpy(usb_port_name, "native");
     }
     else if (Serial) {
-        logSerial = &Serial;
+        _stream = &Serial;
         strcpy(usb_port_name, "programming");
     }
     this->log(Log::TRACE, "Logger ready, printing on %s port", usb_port_name);
@@ -34,15 +40,15 @@ void Log::log(Level level, char const * const msg, ...) {
     if (level <= _level) {
         char loglevel[8];
         sprintf(loglevel, "%s:", LevelNames[level]);
-        logSerial->print(loglevel);
+        _stream->print(loglevel);
         va_list args;
         va_start(args, msg);
-        print(msg,args);
-        logSerial->print(CR);
+        _print(msg, args);
+        _stream->print(CR);
     }
 }
 
-void Log::print(const char *format, va_list args) {
+void Log::_print(const char *format, va_list args) {
     //
     // loop through format string
     for (; *format != 0; ++format) {
@@ -50,74 +56,72 @@ void Log::print(const char *format, va_list args) {
             ++format;
             if (*format == '\0') break;
             if (*format == '%') {
-                logSerial->print(*format);
+                _stream->print(*format);
                 continue;
             }
             if( *format == 's' ) {
                 register char *s = (char *)va_arg( args, int );
-                logSerial->print(s);
+                _stream->print(s);
                 continue;
             }
             if( *format == 'd' || *format == 'i') {
-                logSerial->print(va_arg( args, int ),DEC);
+                _stream->print(va_arg( args, int ),DEC);
                 continue;
             }
             if( *format == 'x' ) {
-                logSerial->print(va_arg( args, int ),HEX);
+                _stream->print(va_arg( args, int ),HEX);
                 continue;
             }
             if( *format == 'X' ) {
-                logSerial->print("0x");
-                logSerial->print(va_arg( args, int ),HEX);
+                _stream->print("0x");
+                _stream->print(va_arg( args, int ),HEX);
                 continue;
             }
             if( *format == 'b' ) {
-                logSerial->print(va_arg( args, int ),BIN);
+                _stream->print(va_arg( args, int ),BIN);
                 continue;
             }
             if( *format == 'B' ) {
-                logSerial->print("0b");
-                logSerial->print(va_arg( args, int ),BIN);
+                _stream->print("0b");
+                _stream->print(va_arg( args, int ),BIN);
                 continue;
             }
             if( *format == 'l' ) {
-                logSerial->print(va_arg( args, long ),DEC);
+                _stream->print(va_arg( args, long ),DEC);
                 continue;
             }
             if( *format == 'f' ) {
-                logSerial->print(va_arg( args, double ),6);
+                _stream->print(va_arg( args, double ),6);
                 continue;
             }
 
             if( *format == 'c' ) {
-                logSerial->print(va_arg( args, int ));
+                _stream->print(va_arg( args, int ));
                 continue;
             }
             if( *format == 't' ) {
                 if (va_arg( args, int ) == 1) {
-                    logSerial->print("T");
+                    _stream->print("T");
                 }
                 else {
-                    logSerial->print("F");
+                    _stream->print("F");
                 }
                 continue;
             }
             if( *format == 'T' ) {
                 if (va_arg( args, int ) == 1) {
-                    logSerial->print("true");
+                    _stream->print("true");
                 }
                 else {
-                    logSerial->print("false");
+                    _stream->print("false");
                 }
                 continue;
             }
 
         }
-        logSerial->print(*format);
+        _stream->print(*format);
     }
 }
-
-Log logger = Log();
 
 
 

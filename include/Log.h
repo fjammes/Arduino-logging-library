@@ -1,5 +1,6 @@
 #ifndef LOG_H
 #define LOG_H
+
 #include <inttypes.h>
 #include <stdarg.h>
 #if defined(ARDUINO) && ARDUINO >= 100
@@ -9,41 +10,6 @@
 #endif
 
 #define CR "\r\n"
-
-#define LOG_INIT(level, baud_rate) \
-    do { \
-        logger.init(level, baud_rate); \
-    } while (false)
-
-#define LOG_TRACE(msg...) \
-    do { \
-        logger.log(Log::TRACE, msg); \
-    } while (false)
-
-#define LOG_DEBUG(msg...) \
-    do { \
-        logger.log(Log::DEBUG, msg); \
-    } while (false)
-
-#define LOG_INFO(msg...) \
-    do { \
-        logger.log(Log::INFO, msg); \
-    } while (false)
-
-#define LOG_WARN(msg...) \
-    do { \
-        logger.log(Log::WARN, msg); \
-    } while (false)
-
-#define LOG_ERROR(msg...) \
-    do { \
-        logger.log(Log::ERROR, msg); \
-    } while (false)
-
-#define LOG_FATAL(msg...) \
-    do { \
-        logger.log(Log::FATAL, msg); \
-    } while (false)
 
 /**
 * Logging is a helper class to output informations over
@@ -88,18 +54,20 @@ public:
     char const *const LevelNames[6] = { "FATAL", "ERROR", "WARN", "INFO", "DEBUG", "TRACE" };
 
     /**
-     * default Constructor
-     */
-    Log() {} ;
-
-    /**
-    * Initializing, must be called as first.
-    * \param void
-    * \return void
-    *
-    */
+        * Initializing, must be called as first.
+        * \param void
+        * \return void
+        *
+        */
     void init(Log::Level level, long baud);
 
+    /**
+        * Initializing, must be called as first.
+        * \param void
+        * \return void
+        *
+        */
+    void init(Log::Level level, Stream* stream = nullptr);
 
     /**
     * Output an log message with a given log level.
@@ -114,14 +82,57 @@ private:
     int _level = Log::TRACE;
     long _baud;
 
-    Stream* logSerial;
+    Stream* _stream;
 
-    void print(const char *format, va_list args);
+    void _print(const char *format, va_list args);
+
+    void _detectSerial(long baud);
 
 
 };
 
-extern Log logger;
+namespace {
+Log& getLogger() {
+    static Log logger;
+    return logger;
+};
+}
+
+#define LOG_INIT(level, baud_rate) \
+    do { \
+		getLogger().init(level, baud_rate); \
+    } while (false)
+
+#define LOG_TRACE(msg...) \
+    do { \
+        getLogger().log(Log::TRACE, msg); \
+    } while (false)
+
+#define LOG_DEBUG(msg...) \
+    do { \
+        getLogger().log(Log::DEBUG, msg); \
+    } while (false)
+
+#define LOG_INFO(msg...) \
+    do { \
+        getLogger().log(Log::INFO, msg); \
+    } while (false)
+
+#define LOG_WARN(msg...) \
+    do { \
+        getLogger().log(Log::WARN, msg); \
+    } while (false)
+
+#define LOG_ERROR(msg...) \
+    do { \
+        getLogger().log(Log::ERROR, msg); \
+    } while (false)
+
+#define LOG_FATAL(msg...) \
+    do { \
+        getLogger().log(Log::FATAL, msg); \
+    } while (false)
+
 
 #endif
 
