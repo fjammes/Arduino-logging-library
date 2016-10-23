@@ -13,5 +13,5 @@
         "url": "https://github.com/fjammes/ArduinoLogging.git"
     },
     "frameworks": "arduino",
-    "platforms": "mzeropro"
+    "platforms": "*"
 }
